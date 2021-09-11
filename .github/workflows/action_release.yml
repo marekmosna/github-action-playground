@@ -42,8 +42,6 @@ jobs:
 
       - name: Download artefacts
         uses: actions/download-artifact@v2
-        with:
-          path: /artifacts
 
       - name: Create a GitHub release
         uses: ncipollo/release-action@v1
@@ -51,6 +49,6 @@ jobs:
           bodyFile: docs/CHANGELOG_${{ steps.get_version.outputs.VERSION }}.md
           tag: ${{ steps.get_version.outputs.VERSION }}
           name: Release ${{ steps.get_version.outputs.VERSION }}
-          artifacts: "/artifacts/*"
+          artifacts: "dummy-app-gcc*"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
