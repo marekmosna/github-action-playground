@@ -33,12 +33,16 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     steps:
+      - name: Get the version
+        id: get_version
+        run: echo ::set-output name=VERSION::$(echo $GITHUB_REF | cut -d / -f 3)
+
       - name: Create a GitHub release
         uses: ncipollo/release-action@v1
         with:
-          bodyFile: docs/CHANGELOG_${{ github.ref }}.md
-          tag: ${{ github.ref }}
-          name: Release ${{ github.ref }}
+          bodyFile: docs/CHANGELOG_${{ steps.get_version.outputs.VERSION }}.md
+          tag: ${{ steps.get_version.outputs.VERSION }}
+          name: Release ${{ steps.get_version.outputs.VERSION }}
           artifacts: "*"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
