@@ -36,7 +36,7 @@ jobs:
       - name: Create a GitHub release
         uses: ncipollo/release-action@v1
         with:
-          bodyFile: CHANGELOG_${{ github.ref }}.md
+          bodyFile: docs/CHANGELOG_${{ github.ref }}.md
           tag: ${{ github.ref }}
           name: Release ${{ github.ref }}
           artifacts: "*"
