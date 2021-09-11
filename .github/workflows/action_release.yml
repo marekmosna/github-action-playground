@@ -52,6 +52,6 @@ jobs:
           bodyFile: docs/CHANGELOG_${{ steps.get_version.outputs.VERSION }}.md
           tag: ${{ steps.get_version.outputs.VERSION }}
           name: Release ${{ steps.get_version.outputs.VERSION }}
-          artifacts: "dummy-app-gcc*"
+          artifacts: "dummy-app-gcc*/*"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
