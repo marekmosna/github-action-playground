@@ -1,0 +1,44 @@
+name: Releases
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        compiler-version: ["8", "9", "10"]
+    container: marekmosna/arm32v7-toolchain:${{ matrix.compiler-version }}
+    env:
+      BINARY_DIR: build
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v2
+
+      - name: CMake configure project
+        run: cmake -DCMAKE_TOOLCHAIN_FILE="cmake/arm-gcc-toolchain.cmake" -S . -B ${{ env.BINARY_DIR }}
+
+      - name: Build project
+        run: cmake --build ${{ env.BINARY_DIR }} --target Dummy
+
+      - name: Archive build
+        uses: actions/upload-artifact@v2
+        with:
+          name: dummy-app-gcc-v${{ matrix.compiler-version }}
+          path: ${{ env.BINARY_DIR }}/apps/Dummy
+  release:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Create a GitHub release
+        uses: ncipollo/release-action@v1
+        with:
+          bodyFile: CHANGELOG_${{ github.ref }}.md
+          tag: ${{ github.ref }}
+          name: Release ${{ github.ref }}
+          artifacts: "*"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
