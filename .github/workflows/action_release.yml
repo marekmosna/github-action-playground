@@ -40,12 +40,17 @@ jobs:
         id: get_version
         run: echo ::set-output name=VERSION::$(echo $GITHUB_REF | cut -d / -f 3)
 
+      - name: Download artefacts
+        uses: actions/download-artifact@v2
+        with:
+          path: /artifacts
+
       - name: Create a GitHub release
         uses: ncipollo/release-action@v1
         with:
           bodyFile: docs/CHANGELOG_${{ steps.get_version.outputs.VERSION }}.md
           tag: ${{ steps.get_version.outputs.VERSION }}
           name: Release ${{ steps.get_version.outputs.VERSION }}
-          artifacts: "*"
+          artifacts: "/artifacts/*"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
